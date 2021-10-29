@@ -1,6 +1,6 @@
 # jdbcProj
 databases
-players - merlyn
+players - Merlyn
 gamesOwned - Neve
 gamesPlayed - Evan
 games - Reshma
