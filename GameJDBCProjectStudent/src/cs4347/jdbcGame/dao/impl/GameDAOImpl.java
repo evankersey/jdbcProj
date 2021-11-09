@@ -26,7 +26,7 @@ import cs4347.jdbcGame.util.DAOException;
 public class GameDAOImpl implements GameDAO
 {
 
-    private static final String insertSQL = "INSERT INTO game (title, description, release_date, version) VALUES (?, ?, ?, ?);";
+    private static final String insertSQL = "INSERT INTO game (title, description, releaseDate, version) VALUES (?, ?, ?, ?);";
 
     @Override
     public Game create(Connection connection, Game game) throws SQLException, DAOException
@@ -58,7 +58,7 @@ public class GameDAOImpl implements GameDAO
         }
     }
 
-    final static String selectSQL = "SELECT id, title, description, release_date, version FROM game where id = ?";
+    final static String selectSQL = "SELECT id, title, description, releaseDate, version FROM game where id = ?";
 
     @Override
     public Game retrieve(Connection connection, Long gameID) throws SQLException, DAOException
@@ -86,7 +86,7 @@ public class GameDAOImpl implements GameDAO
         }
     }
 
-    final static String updateSQL = "UPDATE game SET title = ?, description = ?, release_date = ?, version = ? WHERE id = ?;";
+    final static String updateSQL = "UPDATE game SET title = ?, description = ?, releaseDate = ?, version = ? WHERE id = ?;";
 
     @Override
     public int update(Connection connection, Game game) throws SQLException, DAOException
@@ -161,7 +161,7 @@ public class GameDAOImpl implements GameDAO
         }
     }
 
-    final static String retrieveByTitleSQL = "select id,title,description,release_date,version from game where title like ?";
+    final static String retrieveByTitleSQL = "select id,title,description,releaseDate,version from game where title like ?";
 
     @Override
     public List<Game> retrieveByTitle(Connection connection, String title) throws SQLException, DAOException
@@ -186,7 +186,7 @@ public class GameDAOImpl implements GameDAO
         }
     }
 
-    final static String retrieveByRelDate = "select id,title,description,release_date,version from game where release_date between ? and ?";
+    final static String retrieveByRelDate = "select id,title,description,releaseDate,version from game where releaseDate between ? and ?";
 
     @Override
     public List<Game> retrieveByReleaseDate(Connection connection, Date start, Date end)
@@ -218,7 +218,7 @@ public class GameDAOImpl implements GameDAO
         game.setId(rs.getLong("id"));
         game.setTitle(rs.getString("title"));
         game.setDescription(rs.getString("description"));
-        game.setReleaseDate(rs.getDate("release_date"));
+        game.setReleaseDate(rs.getDate("releaseDate"));
         game.setVersion(rs.getString("version"));
         return game;
     }
