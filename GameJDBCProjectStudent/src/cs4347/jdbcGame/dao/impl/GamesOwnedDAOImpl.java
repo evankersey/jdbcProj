@@ -82,48 +82,42 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
         }
     }
 
-        @Override
-        public GamesOwned retrievePlayerGameID (Connection connection, Long playerID, Long gameID)
-            throws SQLException, DAOException
-        {
-            //fixme
-            return null;
-        }
-
-        @Override
-        public List<GamesOwned> retrieveByGame (Connection connection, Long gameID) throws SQLException, DAOException
-        {
-            //fixme
-            return null;
-        }
-
-        @Override
-        public List<GamesOwned> retrieveByPlayer (Connection connection, Long playerID) throws
-        SQLException, DAOException
-        {
-            //fixme
-            return null;
-        }
-
-        @Override
-        public int update (Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException
-        {
-            //fixme
-            return 0;
-        }
-
-        @Override
-        public int delete (Connection connection, Long gameOwnedID) throws SQLException, DAOException
-        {
-            //fixme
-            return 0;
-        }
-
-        @Override
-        public int count (Connection connection) throws SQLException, DAOException
-        {
-            //fixme
-            return 0;
-        }
-
+    @Override
+    public GamesOwned retrievePlayerGameID(Connection connection, Long playerID, Long gameID)
+            throws SQLException, DAOException {
+        //fixme
+        return null;
     }
+
+    @Override
+    public List<GamesOwned> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException {
+        //fixme
+        return null;
+    }
+
+    @Override
+    public List<GamesOwned> retrieveByPlayer(Connection connection, Long playerID) throws
+            SQLException, DAOException {
+        //fixme
+        return null;
+    }
+
+    @Override
+    public int update(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException {
+        //fixme
+        return 0;
+    }
+
+    @Override
+    public int delete(Connection connection, Long gameOwnedID) throws SQLException, DAOException {
+        //fixme
+        return 0;
+    }
+
+    @Override
+    public int count(Connection connection) throws SQLException, DAOException {
+        //fixme
+        return 0;
+    }
+
+}
