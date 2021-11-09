@@ -216,8 +216,23 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public int delete(Connection connection, Long gameOwnedID) throws SQLException, DAOException {
-        //fixme
-        return 0;
+        final String deleteSQL = "DELETE FROM GamesOwned WHERE ID = ?;";
+        if (gameOwnedID == null) {
+            throw new DAOException("Trying to delete GamesOwned with NULL ID");
+        }
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(deleteSQL);
+            ps.setLong(1, gameOwnedID);
+
+            int rows = ps.executeUpdate();
+            return rows;
+        }
+        finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
     @Override
