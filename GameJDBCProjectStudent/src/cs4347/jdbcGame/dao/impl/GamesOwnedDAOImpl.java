@@ -10,8 +10,7 @@
  */
 package cs4347.jdbcGame.dao.impl;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 import cs4347.jdbcGame.dao.GamesOwnedDAO;
@@ -20,16 +19,45 @@ import cs4347.jdbcGame.util.DAOException;
 
 public class GamesOwnedDAOImpl implements GamesOwnedDAO
 {
+    private static final String insertSQL = "INSERT INTO GamesOwned(id, playerID, gameID, purchaseDate, purchasePrice, Game_title) "
+            + "VALUES(?,?,?,?,?,?);";
 
     @Override
     public GamesOwned create(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException
     {
-        return null;
+        if (gamesOwned.getId() != null) {
+            throw new DAOException("Trying to insert gamesOwned with NON-NULL ID");
+        }
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+
+            ps.setLong(1, gamesOwned.getPlayerID());
+            ps.setLong(2, gamesOwned.getGameID());
+            ps.setDate(3, (Date) gamesOwned.getPurchaseDate());
+            ps.setFloat(4, gamesOwned.getPurchasePrice());
+            ps.setString(5, "title"); //fixMe
+            ps.executeUpdate();
+
+            // Copy the assigned ID to the game instance.
+            ResultSet keyRS = ps.getGeneratedKeys();
+            keyRS.next();
+            int lastKey = keyRS.getInt(1);
+            gamesOwned.setId((long) lastKey);
+            return gamesOwned;
+        }
+        finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
     @Override
     public GamesOwned retrieveID(Connection connection, Long gamesOwnedID) throws SQLException, DAOException
     {
+
+        //fixme
         return null;
     }
 
@@ -37,36 +65,42 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
     public GamesOwned retrievePlayerGameID(Connection connection, Long playerID, Long gameID)
             throws SQLException, DAOException
     {
+        //fixme
         return null;
     }
 
     @Override
     public List<GamesOwned> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException
     {
+        //fixme
         return null;
     }
 
     @Override
     public List<GamesOwned> retrieveByPlayer(Connection connection, Long playerID) throws SQLException, DAOException
     {
+        //fixme
         return null;
     }
 
     @Override
     public int update(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException
     {
+        //fixme
         return 0;
     }
 
     @Override
     public int delete(Connection connection, Long gameOwnedID) throws SQLException, DAOException
     {
+        //fixme
         return 0;
     }
 
     @Override
     public int count(Connection connection) throws SQLException, DAOException
     {
+        //fixme
         return 0;
     }
 

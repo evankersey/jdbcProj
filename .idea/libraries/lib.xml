@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/GameJDBCProjectTesting/lib/mysql-connector-java-8.0.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GameJDBCProjectTesting/lib/commons-dbcp2-2.4.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GameJDBCProjectTesting/lib/commons-pool2-2.5.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GameJDBCProjectTesting/lib/commons-logging-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
