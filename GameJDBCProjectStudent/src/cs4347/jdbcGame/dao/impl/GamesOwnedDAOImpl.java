@@ -11,6 +11,7 @@
 package cs4347.jdbcGame.dao.impl;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import cs4347.jdbcGame.dao.GamesOwnedDAO;
@@ -85,14 +86,72 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
     @Override
     public GamesOwned retrievePlayerGameID(Connection connection, Long playerID, Long gameID)
             throws SQLException, DAOException {
-        //fixme
-        return null;
+        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
+                + "FROM GamesOwned where gameID = ? AND playerID = ?";
+
+        if (gameID == null) {
+            throw new DAOException("Trying to retrieve gamesOwned with NULL gameID");
+        } else if(playerID == null){
+            throw new DAOException("Trying to retrieve gamesOwned with NULL playerID");
+        }
+
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(selectQuery);
+            ps.setLong(1, gameID);
+            ps.setLong(2, playerID);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            GamesOwned gamesOwned = new GamesOwned();
+            gamesOwned.setGameID(rs.getLong("id"));
+            gamesOwned.setPlayerID(rs.getLong("playerID"));
+            gamesOwned.setGameID(rs.getLong("gameID"));
+            gamesOwned.setPurchaseDate(rs.getDate("purchaseDate"));
+            gamesOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
+            return gamesOwned;
+        } finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
     @Override
     public List<GamesOwned> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException {
-        //fixme
-        return null;
+        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
+                + "FROM GamesOwned where gameID = ?";
+
+        if (gameID == null) {
+            throw new DAOException("Trying to retrieve gamesOwned with NULL ID");
+        }
+
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(selectQuery);
+            ps.setLong(1, gameID);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            List<GamesOwned> result = new ArrayList<GamesOwned>();
+            while (rs.next()) {
+                GamesOwned gamesOwned = new GamesOwned();
+                gamesOwned.setGameID(rs.getLong("id"));
+                gamesOwned.setPlayerID(rs.getLong("playerID"));
+                gamesOwned.setGameID(rs.getLong("gameID"));
+                gamesOwned.setPurchaseDate(rs.getDate("purchaseDate"));
+                gamesOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
+                result.add(gamesOwned);
+            }
+            return result;
+
+        } finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
     @Override
