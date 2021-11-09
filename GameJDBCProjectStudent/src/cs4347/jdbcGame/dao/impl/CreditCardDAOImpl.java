@@ -29,7 +29,7 @@ public class CreditCardDAOImpl implements CreditCardDAO
     public CreditCard create(Connection connection, CreditCard creditCard, Long playerID)
             throws SQLException, DAOException
     {
-        final String insertSQL = "INSERT INTO CreditCard(ccName, ccNumber, expDate, securityCode, playerID) "
+        final String insertSQL = "INSERT INTO CreditCard(ccName, ccNumber, expDate, securityCode, playerId_cc_fk) "
                 + "VALUES(?,?,?,?,?);";
         if (creditCard.getId() != null) {
             throw new DAOException("Trying to insert CreditCard with NON-NULL ID");

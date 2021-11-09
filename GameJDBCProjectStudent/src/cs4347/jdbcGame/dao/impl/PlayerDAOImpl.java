@@ -25,7 +25,7 @@ import cs4347.jdbcGame.util.DAOException;
 public class PlayerDAOImpl implements PlayerDAO
 {
 
-    private static final String insertSQL = "INSERT INTO player (first_name, last_name, join_date, email) VALUES (?, ?, ?, ?);";
+    private static final String insertSQL = "INSERT INTO Player (firstName, lastName, join_date, email) VALUES (?, ?, ?, ?);";
 
     @Override
     public Player create(Connection connection, Player player) throws SQLException, DAOException

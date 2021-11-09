@@ -22,7 +22,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public GamesOwned create(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException {
-        final String insertSQL = "INSERT INTO GamesOwned(playerID, gameID, purchaseDate, purchasePrice) "
+        final String insertSQL = "INSERT INTO GamesOwned(playerId_go_fk, gameID, purchaseDate, purchasePrice) "
                 + "VALUES(?,?,?,?);";
 
         if (gamesOwned.getId() != null) {
@@ -53,8 +53,8 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public GamesOwned retrieveID(Connection connection, Long gamesOwnedID) throws SQLException, DAOException {
-        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
-                + "FROM GamesOwned where id = ?";
+        final String selectQuery = "SELECT GamesOwnedId, playerId_cc_fk, gameID, purchaseDate, purchasePrice "
+                + "FROM GamesOwned where GamesOwnedId = ?";
 
         if (gamesOwnedID == null) {
             throw new DAOException("Trying to retrieve gamesOwned with NULL ID");
@@ -71,7 +71,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
             GamesOwned gamesOwned = new GamesOwned();
             gamesOwned.setGameID(rs.getLong("id"));
-            gamesOwned.setPlayerID(rs.getLong("playerID"));
+            gamesOwned.setPlayerID(rs.getLong("playerId_cc_fk"));
             gamesOwned.setGameID(rs.getLong("gameID"));
             gamesOwned.setPurchaseDate(rs.getDate("purchaseDate"));
             gamesOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
@@ -86,8 +86,8 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
     @Override
     public GamesOwned retrievePlayerGameID(Connection connection, Long playerID, Long gameID)
             throws SQLException, DAOException {
-        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
-                + "FROM GamesOwned where gameID = ? AND playerID = ?";
+        final String selectQuery = "SELECT GamesOwnedId, playerId_cc_fk, gameID, purchaseDate, purchasePrice "
+                + "FROM GamesOwned where gameID = ? AND playerId_cc_fk = ?";
 
         if (gameID == null) {
             throw new DAOException("Trying to retrieve gamesOwned with NULL gameID");
@@ -106,7 +106,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
             }
             GamesOwned gamesOwned = new GamesOwned();
             gamesOwned.setGameID(rs.getLong("id"));
-            gamesOwned.setPlayerID(rs.getLong("playerID"));
+            gamesOwned.setPlayerID(rs.getLong("playerId_cc_fk"));
             gamesOwned.setGameID(rs.getLong("gameID"));
             gamesOwned.setPurchaseDate(rs.getDate("purchaseDate"));
             gamesOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
@@ -120,7 +120,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public List<GamesOwned> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException {
-        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
+        final String selectQuery = "SELECT GamesOwnedId, playerId_cc_fk, gameID, purchaseDate, purchasePrice "
                 + "FROM GamesOwned where gameID = ?";
 
         if (gameID == null) {
@@ -157,8 +157,8 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
     @Override
     public List<GamesOwned> retrieveByPlayer(Connection connection, Long playerID) throws
             SQLException, DAOException {
-        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
-                + "FROM GamesOwned where playerID = ?";
+        final String selectQuery = "SELECT GamesOwnedID, playerId_cc_fk, gameID, purchaseDate, purchasePrice "
+                + "FROM GamesOwned where playerId_cc_fk = ?";
 
         if (playerID == null) {
             throw new DAOException("Trying to retrieve gamesOwned with NULL playerID");
@@ -176,7 +176,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
             while (rs.next()) {
                 GamesOwned gamesOwned = new GamesOwned();
                 gamesOwned.setGameID(rs.getLong("id"));
-                gamesOwned.setPlayerID(rs.getLong("playerID"));
+                gamesOwned.setPlayerID(rs.getLong("playerId_cc_fk"));
                 gamesOwned.setGameID(rs.getLong("gameID"));
                 gamesOwned.setPurchaseDate(rs.getDate("purchaseDate"));
                 gamesOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
@@ -193,8 +193,8 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public int update(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException {
-        final String updateSQL = "UPDATE GamesOwned SET id = ?, playerID = ?, gameID = ?, purchaseDate = ?, purchasePrice = ? "
-                + "WHERE id = ?;";
+        final String updateSQL = "UPDATE GamesOwned SET GamesOwnedId = ?, playerId_cc_fk = ?, gameID = ?, purchaseDate = ?, purchasePrice = ? "
+                + "WHERE GamesOwnedId = ?;";
         if(gamesOwned.getGameID() == null){
             throw new DAOException("Trying to update GamesOwned with NULL ID");
         }
@@ -216,7 +216,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public int delete(Connection connection, Long gameOwnedID) throws SQLException, DAOException {
-        final String deleteSQL = "DELETE FROM GamesOwned WHERE ID = ?;";
+        final String deleteSQL = "DELETE FROM GamesOwned WHERE GamesOwnedId = ?;";
         if (gameOwnedID == null) {
             throw new DAOException("Trying to delete GamesOwned with NULL ID");
         }

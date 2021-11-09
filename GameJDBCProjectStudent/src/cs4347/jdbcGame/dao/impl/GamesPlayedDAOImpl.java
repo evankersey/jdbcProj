@@ -29,7 +29,7 @@ private Long id;
     @Override
     public GamesPlayed create(Connection connection, GamesPlayed gamesPlayed) throws SQLException, DAOException
     {
-        final String insertSQL = "INSERT INTO GamesPlayed(playerID, gameID, timeFinished, score) "
+        final String insertSQL = "INSERT INTO gamesPlayed(playerID, gameID, timeFinished, score) "
                 + "VALUES(?,?,?,?);";
 
         if (gamesPlayed.getId() != null) {
