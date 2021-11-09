@@ -200,6 +200,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
         }
         PreparedStatement ps = null;
         try{
+            ps = connection.prepareStatement(updateSQL);
             ps.setLong(1, gamesOwned.getPlayerID());
             ps.setLong(2, gamesOwned.getGameID());
             ps.setDate(3, (Date) gamesOwned.getPurchaseDate());
