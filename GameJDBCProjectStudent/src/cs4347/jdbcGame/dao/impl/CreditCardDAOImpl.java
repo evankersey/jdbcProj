@@ -23,13 +23,14 @@ import cs4347.jdbcGame.util.DAOException;
 
 public class CreditCardDAOImpl implements CreditCardDAO
 {
-    private static final String insertSQL = "INSERT INTO creditcard(cc_name, cc_number, exp_date, security_code, player_id) "
-            + "VALUES(?,?,?,?,?);";
+
 
     @Override
     public CreditCard create(Connection connection, CreditCard creditCard, Long playerID)
             throws SQLException, DAOException
     {
+        final String insertSQL = "INSERT INTO CreditCard(ccName, ccNumber, expDate, securityCode, playerID) "
+                + "VALUES(?,?,?,?,?);";
         if (creditCard.getId() != null) {
             throw new DAOException("Trying to insert CreditCard with NON-NULL ID");
         }
@@ -62,6 +63,7 @@ public class CreditCardDAOImpl implements CreditCardDAO
     @Override
     public CreditCard retrieve(Connection connection, Long ccID) throws SQLException, DAOException
     {
+
         return null;
     }
 
