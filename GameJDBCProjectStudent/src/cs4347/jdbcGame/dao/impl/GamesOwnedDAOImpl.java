@@ -22,8 +22,8 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public GamesOwned create(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException {
-        final String insertSQL = "INSERT INTO GamesOwned(id, playerID, gameID, purchaseDate, purchasePrice) "
-                + "VALUES(?,?,?,?,?);";
+        final String insertSQL = "INSERT INTO GamesOwned(playerID, gameID, purchaseDate, purchasePrice) "
+                + "VALUES(?,?,?,?);";
 
         if (gamesOwned.getId() != null) {
             throw new DAOException("Trying to insert gamesOwned with NON-NULL ID");
