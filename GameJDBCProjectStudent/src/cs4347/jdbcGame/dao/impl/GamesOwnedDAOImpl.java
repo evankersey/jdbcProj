@@ -1,4 +1,4 @@
-/* NOTICE: All materials provided by this project, and materials derived 
+/* NOTICE: All materials provided by this project, and materials derived
  * from the project, are the property of the University of Texas.
  * Project materials, or those derived from the materials, cannot be placed
  * into publicly accessible locations on the web. Project materials cannot
@@ -17,14 +17,13 @@ import cs4347.jdbcGame.dao.GamesOwnedDAO;
 import cs4347.jdbcGame.entity.GamesOwned;
 import cs4347.jdbcGame.util.DAOException;
 
-public class GamesOwnedDAOImpl implements GamesOwnedDAO
-{
-    private static final String insertSQL = "INSERT INTO GamesOwned(id, playerID, gameID, purchaseDate, purchasePrice, Game_title) "
-            + "VALUES(?,?,?,?,?,?);";
+public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
-    public GamesOwned create(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException
-    {
+    public GamesOwned create(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException {
+        final String insertSQL = "INSERT INTO GamesOwned(id, playerID, gameID, purchaseDate, purchasePrice) "
+                + "VALUES(?,?,?,?,?);";
+
         if (gamesOwned.getId() != null) {
             throw new DAOException("Trying to insert gamesOwned with NON-NULL ID");
         }
@@ -36,7 +35,6 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
             ps.setLong(2, gamesOwned.getGameID());
             ps.setDate(3, (Date) gamesOwned.getPurchaseDate());
             ps.setFloat(4, gamesOwned.getPurchasePrice());
-            ps.setString(5, "title"); //fixMe
             ps.executeUpdate();
 
             // Copy the assigned ID to the game instance.
@@ -45,8 +43,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
             int lastKey = keyRS.getInt(1);
             gamesOwned.setId((long) lastKey);
             return gamesOwned;
-        }
-        finally {
+        } finally {
             if (ps != null && !ps.isClosed()) {
                 ps.close();
             }
@@ -54,54 +51,79 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
     }
 
     @Override
-    public GamesOwned retrieveID(Connection connection, Long gamesOwnedID) throws SQLException, DAOException
-    {
+    public GamesOwned retrieveID(Connection connection, Long gamesOwnedID) throws SQLException, DAOException {
+        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
+                + "FROM GamesOwned where id = ?";
 
-        //fixme
-        return null;
+        if (gamesOwnedID == null) {
+            throw new DAOException("Trying to retrieve gamesOwned with NULL ID");
+        }
+
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(selectQuery);
+            ps.setLong(1, gamesOwnedID);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+
+            GamesOwned gamesOwned = new GamesOwned();
+            gamesOwned.setGameID(rs.getLong("id"));
+            gamesOwned.setPlayerID(rs.getLong("playerID"));
+            gamesOwned.setGameID(rs.getLong("gameID"));
+            gamesOwned.setPurchaseDate(rs.getDate("purchaseDate"));
+            gamesOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
+            return gamesOwned;
+        } finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
-    @Override
-    public GamesOwned retrievePlayerGameID(Connection connection, Long playerID, Long gameID)
+        @Override
+        public GamesOwned retrievePlayerGameID (Connection connection, Long playerID, Long gameID)
             throws SQLException, DAOException
-    {
-        //fixme
-        return null;
-    }
+        {
+            //fixme
+            return null;
+        }
 
-    @Override
-    public List<GamesOwned> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException
-    {
-        //fixme
-        return null;
-    }
+        @Override
+        public List<GamesOwned> retrieveByGame (Connection connection, Long gameID) throws SQLException, DAOException
+        {
+            //fixme
+            return null;
+        }
 
-    @Override
-    public List<GamesOwned> retrieveByPlayer(Connection connection, Long playerID) throws SQLException, DAOException
-    {
-        //fixme
-        return null;
-    }
+        @Override
+        public List<GamesOwned> retrieveByPlayer (Connection connection, Long playerID) throws
+        SQLException, DAOException
+        {
+            //fixme
+            return null;
+        }
 
-    @Override
-    public int update(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException
-    {
-        //fixme
-        return 0;
-    }
+        @Override
+        public int update (Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException
+        {
+            //fixme
+            return 0;
+        }
 
-    @Override
-    public int delete(Connection connection, Long gameOwnedID) throws SQLException, DAOException
-    {
-        //fixme
-        return 0;
-    }
+        @Override
+        public int delete (Connection connection, Long gameOwnedID) throws SQLException, DAOException
+        {
+            //fixme
+            return 0;
+        }
 
-    @Override
-    public int count(Connection connection) throws SQLException, DAOException
-    {
-        //fixme
-        return 0;
-    }
+        @Override
+        public int count (Connection connection) throws SQLException, DAOException
+        {
+            //fixme
+            return 0;
+        }
 
-}
+    }
