@@ -237,8 +237,21 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
 
     @Override
     public int count(Connection connection) throws SQLException, DAOException {
-        //fixme
-        return 0;
+        final String countSQL = "SELECT * FROM GamesOwned;";
+        PreparedStatement ps = null;
+        try{
+            ps = connection.prepareStatement(countSQL);
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            while(rs.next()){
+                count++;
+            }
+            return count;
+        }finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
 }
