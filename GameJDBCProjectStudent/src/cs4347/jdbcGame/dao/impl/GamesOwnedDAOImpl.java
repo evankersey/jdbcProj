@@ -38,7 +38,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
             ps.setFloat(4, gamesOwned.getPurchasePrice());
             ps.executeUpdate();
 
-            // Copy the assigned ID to the game instance.
+            // Copy the assigned ID to the game instance. //todo what is this??? insert what key where?
             ResultSet keyRS = ps.getGeneratedKeys();
             keyRS.next();
             int lastKey = keyRS.getInt(1);
@@ -157,14 +157,60 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO {
     @Override
     public List<GamesOwned> retrieveByPlayer(Connection connection, Long playerID) throws
             SQLException, DAOException {
-        //fixme
-        return null;
+        final String selectQuery = "SELECT id, playerID, gameID, purchaseDate, purchasePrice "
+                + "FROM GamesOwned where playerID = ?";
+
+        if (playerID == null) {
+            throw new DAOException("Trying to retrieve gamesOwned with NULL playerID");
+        }
+
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(selectQuery);
+            ps.setLong(1, playerID);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            List<GamesOwned> result = new ArrayList<GamesOwned>();
+            while (rs.next()) {
+                GamesOwned gamesOwned = new GamesOwned();
+                gamesOwned.setGameID(rs.getLong("id"));
+                gamesOwned.setPlayerID(rs.getLong("playerID"));
+                gamesOwned.setGameID(rs.getLong("gameID"));
+                gamesOwned.setPurchaseDate(rs.getDate("purchaseDate"));
+                gamesOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
+                result.add(gamesOwned);
+            }
+            return result;
+
+        } finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
     @Override
     public int update(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException {
-        //fixme
-        return 0;
+        final String updateSQL = "UPDATE GamesOwned SET id = ?, playerID = ?, gameID = ?, purchaseDate = ?, purchasePrice = ? "
+                + "WHERE id = ?;";
+        if(gamesOwned.getGameID() == null){
+            throw new DAOException("Trying to update GamesOwned with NULL ID");
+        }
+        PreparedStatement ps = null;
+        try{
+            ps.setLong(1, gamesOwned.getPlayerID());
+            ps.setLong(2, gamesOwned.getGameID());
+            ps.setDate(3, (Date) gamesOwned.getPurchaseDate());
+            ps.setFloat(4, gamesOwned.getPurchasePrice());
+            int rows = ps.executeUpdate();
+            return rows;
+        }finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
 
     @Override
