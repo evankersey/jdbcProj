@@ -9,7 +9,6 @@
  * in the reporting of all team members for academic dishonesty. 
  */
 package dao;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -30,8 +29,7 @@ import cs4347.jdbcGame.util.TestingUtil;
 
 public class CreditCardDAOImplTestCase
 {
-
-    @Test
+   @Test
     public void testCreate() throws Exception
     {
         DataSource ds = DataSourceManager.getDataSource();
