@@ -76,8 +76,11 @@ public class PlayerServiceImpl implements PlayerService {
             throw new DAOException("Trying to retrieve Player with NULL ID");
         }
         try {
-            Player myPlayer = new Player();
+            Player myPlayer = null;
             myPlayer = playerDAO.retrieve(connection, playerID);
+            if(myPlayer == null){
+                return null;
+            }
 
             //get credit cards
             myPlayer.setCreditCards(ccDAO.retrieveCreditCardsForPlayer(connection, playerID));
@@ -94,7 +97,22 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public int update(Player player) throws DAOException, SQLException {
-        return 0;
+        PlayerDAO playerDAO = new PlayerDAOImpl();
+        Connection connection = dataSource.getConnection();
+        try{
+            connection.setAutoCommit(false);
+            return playerDAO.update(connection, player);
+        }catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
