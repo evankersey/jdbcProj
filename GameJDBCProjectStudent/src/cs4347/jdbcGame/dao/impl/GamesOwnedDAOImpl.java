@@ -24,7 +24,7 @@ import cs4347.jdbcGame.util.DAOException;
 
 public class GamesOwnedDAOImpl implements GamesOwnedDAO
 {
-	private static final String insertSQL = "INSERT INTO gamesOwned (playerID, gameID, purchaseDate, purchasePrice) VALUES (?, ?, ?, ?);";
+	private static final String insertSQL = "INSERT INTO gamesOwned (Player_id, game_id, purchaseDate, purchasePrice) VALUES (?, ?, ?, ?);";
 
     @Override
     public GamesOwned create(Connection connection, GamesOwned gamesOwned) throws SQLException, DAOException
@@ -111,7 +111,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
          }
     
     }
-    final static String retrieveByGameIDSQL = "SELECT id, playerID, gameID, purchaseDate, purchasePrice FROM gamesOwned where game_id= ?;";
+    final static String retrieveByGameIDSQL = "SELECT id, Player_id, game_id, purchaseDate, purchasePrice FROM gamesOwned where game_id= ?;";
 
     @Override
     public List<GamesOwned> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException
@@ -137,7 +137,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
     }
 
     
-    final static String retrieveByPlayerIDSQL = "SELECT * FROM gamesOwned where playerID= ?;";
+    final static String retrieveByPlayer_idSQL = "SELECT * FROM gamesOwned where Player_id = ?;";
 
     @Override
     public List<GamesOwned> retrieveByPlayer(Connection connection, Long playerID) throws SQLException, DAOException
@@ -145,7 +145,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
     	List<GamesOwned> result = new ArrayList<GamesOwned>();
         PreparedStatement ps = null;
         try {
-            ps = connection.prepareStatement(retrieveByPlayerIDSQL);
+            ps = connection.prepareStatement(retrieveByPlayer_idSQL);
             ps.setLong(1, playerID);
             ResultSet rs = ps.executeQuery();
 
@@ -166,7 +166,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
     
     
     
-    final static String updateSQL = "UPDATE gamesOwned SET playerID = ?, gameID = ?, purchaseDate = ?, purchasePrice = ? WHERE id = ?;";
+    final static String updateSQL = "UPDATE gamesOwned SET Player_id = ?, game_id = ?, purchaseDate = ?, purchasePrice = ? WHERE id = ?;";
    
 
     @Override
@@ -249,8 +249,8 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
     {
         GamesOwned gameOwned = new GamesOwned();
         gameOwned.setId(rs.getLong("id"));
-        gameOwned.setPlayerID(rs.getLong("playerID"));
-        gameOwned.setGameID(rs.getLong("gameID"));
+        gameOwned.setPlayerID(rs.getLong("Player_id"));
+        gameOwned.setGameID(rs.getLong("game_id"));
         gameOwned.setPurchaseDate(rs.getDate("purchaseDate"));
         gameOwned.setPurchasePrice(rs.getFloat("purchasePrice"));
         return gameOwned;
