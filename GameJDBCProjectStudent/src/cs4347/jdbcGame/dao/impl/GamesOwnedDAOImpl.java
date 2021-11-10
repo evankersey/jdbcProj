@@ -85,7 +85,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
         }
     }
 
-    final static String retrieveByGAndPIDSQL = "SELECT * FROM gamesOwned where game_id = ? AND Player_id = ?;";
+    final static String retrieveByGAndPIDSQL = "SELECT id, Player_id, game_id, purchaseDate, purchasePrice FROM gamesOwned where game_id = ? AND Player_id = ?;";
 
     @Override
     public GamesOwned retrievePlayerGameID(Connection connection, Long playerID, Long gameID)
