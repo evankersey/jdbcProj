@@ -27,7 +27,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
 {
 	
 	
-	private static final String insertQuery = "INSERT INTO gamesPlayed (playerID, gameID, timeFinished, score) VALUES (?, ?, ?, ?);";
+	private static final String insertQuery = "INSERT INTO gamesPlayed (Player_id, game_id, timeFinished, score) VALUES (?, ?, ?, ?);";
 
     @Override
     public GamesPlayed create(Connection connection, GamesPlayed gamesPlayed) throws SQLException, DAOException
@@ -62,7 +62,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
     
     
     
-    final static String retriveQuery = "SELECT id, Player_id, game_id, timeFinished, score FROM gamesPlayed where id = ?";
+    final static String retriveQuery = "SELECT id, Player_id, game_id, timeFinished, score FROM gamesPlayed where id = ?;";
 
     @Override
     public GamesPlayed retrieveID(Connection connection, Long gamePlayedID) throws SQLException, DAOException
@@ -77,10 +77,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
             ps = connection.prepareStatement(retriveQuery);
             ps.setLong(1, gamePlayedID);
             ResultSet rs = ps.executeQuery();
-            if(rs.next())
-            {
-            	return null;
-            }
+
             GamesPlayed gamep = extractFromRS(rs);
 	        return gamep;
             
@@ -92,7 +89,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
         }
     }
     
-    final static String retrievebyGameID = "SELECT * FROM gamesPlayed where gameID = ?;";
+    final static String retrievebyGameID = "SELECT * FROM gamesPlayed where Player_id = ? AND game_id = ?;";
 
     @Override
     public List<GamesPlayed> retrieveByPlayerGameID(Connection connection, Long playerID, Long gameID)
@@ -103,6 +100,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
         try {
         	 ps = connection.prepareStatement(retrievebyGameID);
         	 ps.setLong(1, playerID);
+             ps.setLong(2, gameID);
              ResultSet rs = ps.executeQuery();
              
              while (rs.next()) {
@@ -146,7 +144,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
     }
 
     
-    final static String retrieveGame = "SELECT * FROM gamesPlayed where gameID = ?;";
+    final static String retrieveGame = "SELECT * FROM gamesPlayed where game_id = ?;";
 
     @Override
     public List<GamesPlayed> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException
@@ -252,8 +250,8 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
     {
         GamesPlayed gamePlayed = new GamesPlayed();
         gamePlayed.setId(rs.getLong("id"));
-        gamePlayed.setPlayerID(rs.getLong("playerID"));
-        gamePlayed.setGameID(rs.getLong("gameID"));
+        gamePlayed.setPlayerID(rs.getLong("Player_id"));
+        gamePlayed.setGameID(rs.getLong("game_id"));
         gamePlayed.setTimeFinished(rs.getDate("timeFinished"));
         gamePlayed.setScore(rs.getInt("score"));
         return gamePlayed;

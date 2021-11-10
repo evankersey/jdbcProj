@@ -1,12 +1,12 @@
-/* NOTICE: All materials provided by this project, and materials derived 
- * from the project, are the property of the University of Texas. 
- * Project materials, or those derived from the materials, cannot be placed 
- * into publicly accessible locations on the web. Project materials cannot 
- * be shared with other project teams. Making project materials publicly 
- * accessible, or sharing with other project teams will result in the 
- * failure of the team responsible and any team that uses the shared materials. 
- * Sharing project materials or using shared materials will also result 
- * in the reporting of all team members for academic dishonesty. 
+/* NOTICE: All materials provided by this project, and materials derived
+ * from the project, are the property of the University of Texas.
+ * Project materials, or those derived from the materials, cannot be placed
+ * into publicly accessible locations on the web. Project materials cannot
+ * be shared with other project teams. Making project materials publicly
+ * accessible, or sharing with other project teams will result in the
+ * failure of the team responsible and any team that uses the shared materials.
+ * Sharing project materials or using shared materials will also result
+ * in the reporting of all team members for academic dishonesty.
  */
 package cs4347.jdbcGame.services.impl;
 
@@ -26,20 +26,17 @@ import cs4347.jdbcGame.entity.Player;
 import cs4347.jdbcGame.services.PlayerService;
 import cs4347.jdbcGame.util.DAOException;
 
-public class PlayerServiceImpl implements PlayerService
-{
+public class PlayerServiceImpl implements PlayerService {
     private DataSource dataSource;
 
-    public PlayerServiceImpl(DataSource dataSource)
-    {
+    public PlayerServiceImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public Player create(Player player) throws DAOException, SQLException
-    {
+    public Player create(Player player) throws DAOException, SQLException {
         if (player.getCreditCards() == null || player.getCreditCards().size() == 0) {
-            throw new DAOException("Player must have at lease one CreditCard");
+            throw new DAOException("Player must have at least one CreditCard");
         }
 
         PlayerDAO playerDAO = new PlayerDAOImpl();
@@ -59,8 +56,7 @@ public class PlayerServiceImpl implements PlayerService
         } catch (Exception ex) {
             connection.rollback();
             throw ex;
-        }
-        finally {
+        } finally {
             if (connection != null) {
                 connection.setAutoCommit(true);
             }
@@ -71,41 +67,120 @@ public class PlayerServiceImpl implements PlayerService
     }
 
     @Override
-    public Player retrieve(Long playerID) throws DAOException, SQLException
-    {
-        return null;
+    public Player retrieve(Long playerID) throws DAOException, SQLException {
+        PlayerDAO playerDAO = new PlayerDAOImpl();
+        CreditCardDAO ccDAO = new CreditCardDAOImpl();
+
+        Connection connection = dataSource.getConnection();
+        if (playerID == null) {
+            throw new DAOException("Trying to retrieve Player with NULL ID");
+        }
+        try {
+            Player myPlayer = null;
+            myPlayer = playerDAO.retrieve(connection, playerID);
+            if(myPlayer == null){
+                return null;
+            }
+
+            //get credit cards
+            myPlayer.setCreditCards(ccDAO.retrieveCreditCardsForPlayer(connection, playerID));
+            return myPlayer;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
-    public int update(Player player) throws DAOException, SQLException
-    {
-        return 0;
+    public int update(Player player) throws DAOException, SQLException {
+        PlayerDAO playerDAO = new PlayerDAOImpl();
+        Connection connection = dataSource.getConnection();
+        try{
+            connection.setAutoCommit(false);
+            return playerDAO.update(connection, player);
+        }catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
-    public int delete(Long playerID) throws DAOException, SQLException
-    {
-        return 0;
+    public int delete(Long playerID) throws DAOException, SQLException {
+        PlayerDAO playerDAO = new PlayerDAOImpl();
+        Connection connection = dataSource.getConnection();
+        try {
+            connection.setAutoCommit(false);
+            return playerDAO.delete(connection, playerID);
+
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
-    public int count() throws DAOException, SQLException
-    {
-        return 0;
+    public int count() throws DAOException, SQLException {
+        PlayerDAO playerDAO = new PlayerDAOImpl();
+        Connection connection = dataSource.getConnection();
+        try{
+            connection.setAutoCommit(false);
+            return playerDAO.count(connection);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
-    public List<Player> retrieveByJoinDate(Date start, Date end) throws DAOException, SQLException
-    {
-        return null;
+    public List<Player> retrieveByJoinDate(Date start, Date end) throws DAOException, SQLException {
+        PlayerDAO playerDAO = new PlayerDAOImpl();
+        Connection connection = dataSource.getConnection();
+        try {
+            connection.setAutoCommit(false);
+            return playerDAO.retrieveByJoinDate(connection, start, end);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     /**
      * Used for debugging and testing purposes.
      */
     @Override
-    public int countCreditCardsForPlayer(Long playerID) throws DAOException, SQLException
-    {
+    public int countCreditCardsForPlayer(Long playerID) throws DAOException, SQLException {
         return 0;
     }
 
