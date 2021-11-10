@@ -179,7 +179,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
         if (id == null) {
             throw new DAOException("Trying to update GamesPlayed with NULL ID");
         }
-
+        int rows;
         PreparedStatement ps = null;
         try {
         	ps = connection.prepareStatement(updateSQL);
@@ -189,7 +189,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
          	ps.setInt(4, gamesPlayed.getScore());
         	ps.setLong(5, id);
         	
-        	int rows = ps.executeUpdate();
+        	rows = ps.executeUpdate();
         	return rows;
         
         }

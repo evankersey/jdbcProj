@@ -69,7 +69,7 @@ public class CreditCardDAOImpl implements CreditCardDAO
 
  
     
-    final static String retriveQuery = "SELECT id, Player_id, ccName, ccNumber, securityCode, expDate FROM CreditCard where id = ?;";
+    final static String retriveQuery = "SELECT id, player_id, ccName, ccNumber, securityCode, expDate FROM CreditCard where id = ?;";
 
     
     
@@ -82,11 +82,11 @@ public class CreditCardDAOImpl implements CreditCardDAO
 
         PreparedStatement ps = null;
         try {
-            ps = connection.prepareStatement(retriveQuery);
+            ps = connection.prepareStatement(retriveQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, ccID);
             ResultSet rs = ps.executeQuery();
             CreditCard cc = extractFromRS(rs);
-            if(rs.next())
+            if(!rs.next())
             {
             	   return null;
             }
