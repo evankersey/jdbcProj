@@ -117,7 +117,23 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public int delete(Long playerID) throws DAOException, SQLException {
-        return 0;
+        PlayerDAO playerDAO = new PlayerDAOImpl();
+        Connection connection = dataSource.getConnection();
+        try {
+            connection.setAutoCommit(false);
+            return playerDAO.delete(connection, playerID);
+            //fixMe modify schema to cascade deletion of player
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
