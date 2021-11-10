@@ -60,8 +60,6 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
     }
 
     
-    
-    
     final static String retriveQuery = "SELECT id, Player_id, game_id, timeFinished, score FROM gamesPlayed where id = ?;";
 
     @Override
@@ -77,7 +75,9 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
             ps = connection.prepareStatement(retriveQuery);
             ps.setLong(1, gamePlayedID);
             ResultSet rs = ps.executeQuery();
-
+            if(!rs.next()) {
+                return null;
+            }
             GamesPlayed gamep = extractFromRS(rs);
 	        return gamep;
             
@@ -179,7 +179,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
         if (id == null) {
             throw new DAOException("Trying to update GamesPlayed with NULL ID");
         }
-
+        int rows;
         PreparedStatement ps = null;
         try {
         	ps = connection.prepareStatement(updateSQL);
@@ -189,7 +189,7 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
          	ps.setInt(4, gamesPlayed.getScore());
         	ps.setLong(5, id);
         	
-        	int rows = ps.executeUpdate();
+        	rows = ps.executeUpdate();
         	return rows;
         
         }
