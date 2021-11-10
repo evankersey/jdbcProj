@@ -77,7 +77,9 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
             ps = connection.prepareStatement(retriveQuery);
             ps.setLong(1, gamePlayedID);
             ResultSet rs = ps.executeQuery();
-
+            if(!rs.next()) {
+                return null;
+            }
             GamesPlayed gamep = extractFromRS(rs);
 	        return gamep;
             
