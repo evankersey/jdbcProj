@@ -107,22 +107,78 @@ public class GamesOwnedServiceImpl implements GamesOwnedService {
 
     @Override
     public List<GamesOwned> retrieveByPlayer(long playerID) throws DAOException, SQLException {
-        return null;
+        Connection connection = dataSource.getConnection();
+        GamesOwnedDAO gamesOwnedDAO = new GamesOwnedDAOImpl();
+        try {
+            return gamesOwnedDAO.retrieveByPlayer(connection, playerID);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
     public int update(GamesOwned gamesOwned) throws DAOException, SQLException {
-        return 0;
+        Connection connection = dataSource.getConnection();
+        GamesOwnedDAO gamesOwnedDAO = new GamesOwnedDAOImpl();
+        try {
+            return gamesOwnedDAO.update(connection, gamesOwned);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
     public int delete(long gameOwnedID) throws DAOException, SQLException {
-        return 0;
+        Connection connection = dataSource.getConnection();
+        GamesOwnedDAO gamesOwnedDAO = new GamesOwnedDAOImpl();
+        try {
+            return gamesOwnedDAO.delete(connection, gameOwnedID);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
     public int count() throws DAOException, SQLException {
-        return 0;
+        Connection connection = dataSource.getConnection();
+        GamesOwnedDAO gamesOwnedDAO = new GamesOwnedDAOImpl();
+        try {
+            return gamesOwnedDAO.count(connection);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
 }
