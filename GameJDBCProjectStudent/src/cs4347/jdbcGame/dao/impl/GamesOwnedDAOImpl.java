@@ -186,6 +186,7 @@ public class GamesOwnedDAOImpl implements GamesOwnedDAO
             ps.setLong(2, gamesOwned.getGameID());
             ps.setDate(3, new java.sql.Date(gamesOwned.getPurchaseDate().getTime()));
             ps.setFloat(4, gamesOwned.getPurchasePrice());
+            ps.setLong(5, gamesOwned.getId());
             
             rows = ps.executeUpdate();
         }
