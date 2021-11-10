@@ -105,7 +105,7 @@ public class CreditCardDAOImpl implements CreditCardDAO
 
 
     
-    final static String retrieveCreditCardsForPlayerQuery = "SELECT * FROM CreditCard where playerID = ?";
+    final static String retrieveCreditCardsForPlayerQuery = "SELECT * FROM CreditCard where player_id = ?;";
 
     
     
