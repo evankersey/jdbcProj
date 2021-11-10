@@ -10,11 +10,16 @@
  */
 package cs4347.jdbcGame.services.impl;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import cs4347.jdbcGame.dao.GamesOwnedDAO;
+import cs4347.jdbcGame.dao.GamesPlayedDAO;
+import cs4347.jdbcGame.dao.impl.GamesOwnedDAOImpl;
+import cs4347.jdbcGame.dao.impl.GamesPlayedDAOImpl;
 import cs4347.jdbcGame.entity.GamesPlayed;
 import cs4347.jdbcGame.services.GamesPlayedService;
 import cs4347.jdbcGame.util.DAOException;
@@ -31,7 +36,21 @@ public class GamesPlayedServiceImpl implements GamesPlayedService
     @Override
     public GamesPlayed create(GamesPlayed gamesPlayed) throws DAOException, SQLException
     {
-        return null;
+        Connection connection = dataSource.getConnection();
+        GamesPlayedDAO gamesPlayedDAO = new GamesPlayedDAOImpl();
+        try {
+            return gamesPlayedDAO.create(connection, gamesPlayed);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
