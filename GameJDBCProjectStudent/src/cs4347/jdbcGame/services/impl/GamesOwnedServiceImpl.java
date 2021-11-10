@@ -88,7 +88,21 @@ public class GamesOwnedServiceImpl implements GamesOwnedService {
 
     @Override
     public List<GamesOwned> retrieveByGame(long gameID) throws DAOException, SQLException {
-        return null;
+        Connection connection = dataSource.getConnection();
+        GamesOwnedDAO gamesOwnedDAO = new GamesOwnedDAOImpl();
+        try {
+            return gamesOwnedDAO.retrieveByGame(connection, gameID);
+        } catch (Exception ex) {
+            connection.rollback();
+            throw ex;
+        } finally {
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 
     @Override
