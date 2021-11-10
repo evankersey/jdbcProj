@@ -60,8 +60,6 @@ public class GamesPlayedDAOImpl implements GamesPlayedDAO
     }
 
     
-    
-    
     final static String retriveQuery = "SELECT id, Player_id, game_id, timeFinished, score FROM gamesPlayed where id = ?;";
 
     @Override
