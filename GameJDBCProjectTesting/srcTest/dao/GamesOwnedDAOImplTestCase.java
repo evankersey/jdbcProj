@@ -32,7 +32,7 @@ import cs4347.jdbcGame.util.TestingUtil;
 
 public class GamesOwnedDAOImplTestCase
 {
-    @Test
+   @Test
     public void testCreate() throws Exception
     {
         DataSource ds = DataSourceManager.getDataSource();

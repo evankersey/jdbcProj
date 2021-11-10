@@ -10,96 +10,253 @@
  */
 package cs4347.jdbcGame.dao.impl;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import cs4347.jdbcGame.dao.GamesPlayedDAO;
 import cs4347.jdbcGame.entity.GamesPlayed;
+import cs4347.jdbcGame.entity.Player;
 import cs4347.jdbcGame.util.DAOException;
 
 public class GamesPlayedDAOImpl implements GamesPlayedDAO
 {
-/*
-private Long id;
-    private Long playerID;
-    private Long gameID;
-    private Date timeFinished;
-    private int score;
- */
+	
+	
+	private static final String insertQuery = "INSERT INTO gamesPlayed (playerID, gameID, timeFinished, score) VALUES (?, ?, ?, ?);";
+
     @Override
     public GamesPlayed create(Connection connection, GamesPlayed gamesPlayed) throws SQLException, DAOException
     {
-        final String insertSQL = "INSERT INTO gamesPlayed(playerID, gameID, timeFinished, score) "
-                + "VALUES(?,?,?,?);";
-
-        if (gamesPlayed.getId() != null) {
-            throw new DAOException("Trying to insert gamesPlayed with NON-NULL ID");
+    	if (gamesPlayed.getId() != null) {
+        	throw new DAOException("Trying to insert GamesPlayed with NON-NULL ID");
         }
-        PreparedStatement ps = null;
-        try {
-            ps = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
-
-
-            ps.setLong(1, gamesPlayed.getPlayerID());
-            ps.setLong(2, gamesPlayed.getGameID());
-            ps.setDate(3, (Date) gamesPlayed.getTimeFinished());
-            ps.setLong(4, gamesPlayed.getScore());
-            ps.executeUpdate();
-
-            // Copy the assigned ID to the game instance. //todo what is this??? insert what key where?
-            ResultSet keyRS = ps.getGeneratedKeys();
+    
+    	 PreparedStatement ps = null;
+    	 try {
+         	ps = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+         	ps.setLong(1, gamesPlayed.getPlayerID());
+         	ps.setLong(2, gamesPlayed.getGameID());
+         	ps.setDate(3, new java.sql.Date(gamesPlayed.getTimeFinished().getTime()));
+         	ps.setInt(4, gamesPlayed.getScore());
+         	ps.executeUpdate();
+         	
+         	ResultSet keyRS = ps.getGeneratedKeys();
             keyRS.next();
             int lastKey = keyRS.getInt(1);
             gamesPlayed.setId((long) lastKey);
             return gamesPlayed;
-        } finally {
+    	 }
+    	 finally
+    	 {
+    		 if (ps != null && !ps.isClosed()) {
+                 ps.close();
+             }
+    	 }
+    }
+
+    
+    
+    
+    final static String retriveQuery = "SELECT id, Player_id, game_id, timeFinished, score FROM gamesPlayed where id = ?";
+
+    @Override
+    public GamesPlayed retrieveID(Connection connection, Long gamePlayedID) throws SQLException, DAOException
+    {
+    	if (gamePlayedID == null) 
+    	{
+            throw new DAOException("Trying to retrieve Player with NULL ID");
+        }
+
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(retriveQuery);
+            ps.setLong(1, gamePlayedID);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+            {
+            	return null;
+            }
+            GamesPlayed gamep = extractFromRS(rs);
+	        return gamep;
+            
+        }
+        finally {
             if (ps != null && !ps.isClosed()) {
                 ps.close();
             }
         }
     }
-
-    @Override
-    public GamesPlayed retrieveID(Connection connection, Long gamePlayedID) throws SQLException, DAOException
-    {
-        return null;
-    }
+    
+    final static String retrievebyGameID = "SELECT * FROM gamesPlayed where gameID = ?;";
 
     @Override
     public List<GamesPlayed> retrieveByPlayerGameID(Connection connection, Long playerID, Long gameID)
             throws SQLException, DAOException
     {
-        return null;
+    	List<GamesPlayed> result = new ArrayList<GamesPlayed>();
+        PreparedStatement ps = null;
+        try {
+        	 ps = connection.prepareStatement(retrievebyGameID);
+        	 ps.setLong(1, playerID);
+             ResultSet rs = ps.executeQuery();
+             
+             while (rs.next()) {
+            	 GamesPlayed gp = extractFromRS(rs);
+                 result.add(gp);
+             }
+             
+        }
+        finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
+        return result;
     }
 
+    
+    final static String retrieveByPlayer = "SELECT * FROM gamesPlayed where Player_id = ?;";
     @Override
     public List<GamesPlayed> retrieveByPlayer(Connection connection, Long playerID) throws SQLException, DAOException
     {
-        return null;
+    	List<GamesPlayed> result = new ArrayList<GamesPlayed>();
+        PreparedStatement ps = null;
+        try
+        {
+        	 ps = connection.prepareStatement(retrieveByPlayer);
+             ps.setLong(1, playerID);
+             ResultSet rs = ps.executeQuery();
+             while (rs.next()) {
+            	 GamesPlayed gp = extractFromRS(rs);
+                 result.add(gp);
+             }
+             return result;
+        }
+        finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
+
     }
+
+    
+    final static String retrieveGame = "SELECT * FROM gamesPlayed where gameID = ?;";
 
     @Override
     public List<GamesPlayed> retrieveByGame(Connection connection, Long gameID) throws SQLException, DAOException
     {
-        return null;
+    	List<GamesPlayed> result = new ArrayList<GamesPlayed>();
+        PreparedStatement ps = null;
+        try
+        {
+        	 ps = connection.prepareStatement(retrieveGame);
+             ps.setLong(1, gameID);
+             ResultSet rs = ps.executeQuery();
+             while (rs.next()) {
+            	 GamesPlayed gp = extractFromRS(rs);
+                 result.add(gp);
+             }
+             return result;
+        }
+        finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
+        
     }
+
+    final static String updateSQL = "UPDATE gamesPlayed SET Player_id = ?, game_id = ?, timeFinished = ?, score = ? WHERE id = ?;";
 
     @Override
     public int update(Connection connection, GamesPlayed gamesPlayed) throws SQLException, DAOException
     {
-        return 0;
+    	Long id = gamesPlayed.getId();
+        if (id == null) {
+            throw new DAOException("Trying to update GamesPlayed with NULL ID");
+        }
+
+        PreparedStatement ps = null;
+        try {
+        	ps = connection.prepareStatement(updateSQL);
+        	ps.setLong(1, gamesPlayed.getPlayerID());
+         	ps.setLong(2, gamesPlayed.getGameID());
+         	ps.setDate(3, new java.sql.Date(gamesPlayed.getTimeFinished().getTime()));
+         	ps.setInt(4, gamesPlayed.getScore());
+        	ps.setLong(5, id);
+        	
+        	int rows = ps.executeUpdate();
+        	return rows;
+        
+        }
+        finally 
+        {
+            if (ps != null && !ps.isClosed()) 
+            {
+                ps.close();
+            }
+        } 
     }
 
+    final static String deleteSQL = "delete from gamesPlayed where id = ?;";
     @Override
     public int delete(Connection connection, Long gamePlayedID) throws SQLException, DAOException
     {
-        return 0;
+    	if (gamePlayedID == null) {
+            throw new DAOException("Trying to delete Game Played with NULL ID");
+        }
+    	
+    	PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(deleteSQL);
+            ps.setLong(1, gamePlayedID);
+            int rows = ps.executeUpdate();
+            return rows;
+        }
+        finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
     }
-
+    final static String countSQL = "select count(*) from game";
     @Override
     public int count(Connection connection) throws SQLException, DAOException
     {
-        return 0;
+    	PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(countSQL);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                throw new DAOException("No Count Returned");
+            }
+            int count = rs.getInt(1);
+            return count;
+        }
+        finally {
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+        }
+    }
+    
+    
+    
+    private GamesPlayed extractFromRS(ResultSet rs) throws SQLException
+    {
+        GamesPlayed gamePlayed = new GamesPlayed();
+        gamePlayed.setId(rs.getLong("id"));
+        gamePlayed.setPlayerID(rs.getLong("playerID"));
+        gamePlayed.setGameID(rs.getLong("gameID"));
+        gamePlayed.setTimeFinished(rs.getDate("timeFinished"));
+        gamePlayed.setScore(rs.getInt("score"));
+        return gamePlayed;
     }
 
 }
